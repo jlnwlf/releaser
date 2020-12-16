@@ -73,7 +73,7 @@ class Config:
         parser.add_argument('--template',
                                   type=Path,
                                   dest='template_path',
-                                  default=ROOT / 'templates/change.md.j2')
+                                  default=ROOT / 'releaser/templates/change.md.j2')
         parser.add_argument('--start',
                             default='today @ 21:45')
         parser.add_argument('--end',
