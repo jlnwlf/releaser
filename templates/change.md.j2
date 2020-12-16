@@ -1,0 +1,44 @@
+<style>
+
+    *, table {
+        font-size: 12pt !important;
+        /* font-weight: normal; */
+    }
+
+    table {
+        text-align: left;
+        font-size: 1em;
+        line-height: 1.2em;
+    }
+
+    td {
+        border: 0 !important;
+    }
+
+    td:nth-child(1) {
+        text-align: right;
+        font-weight: bold !important;
+    }
+</style>
+
+Heads up ! **{{ app_name }}** {{ config.next_version.lower() }} version **{{ next_version }}** will be released {{ config.start_text }}:
+
+{% block details_table -%}
+<table>
+  <tr><td>Start time</td><td>{{ config.start }}</td></tr>
+  <tr><td>End time</td><td>{{ config.end }} (duration: {{ duration_text }})</td></tr>
+  <tr><td>Expected Impact</td><td>{{app_name}} will not be reachable for {{ duration_text }}</td></tr>
+  <tr><td>Rollback</td><td>Rollback to {{app_name}} previous version {{ current_version }}</td></tr>
+</table>
+<br />
+{% endblock %}
+
+{% block changelist %}
+Here are the changes introduced with that version:
+
+{{ summary -}}
+{%- endblock -%}
+
+{% block postscriptum %}
+{{ config.preprod_url or 'The preproduction server' }} is already running version {{ next_version }}, so please check for changes related to your business.
+{% endblock %}

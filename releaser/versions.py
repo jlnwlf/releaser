@@ -52,6 +52,9 @@ class VersionsList(list):
     def next_patch(self):
         return self.latest.bump_patch()
 
+    def next_build(self):
+        return self.latest.bump_build()
+
 
 def _normalized_tag_string(tag):
     tag_name = tag.name
