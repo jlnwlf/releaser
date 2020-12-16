@@ -36,6 +36,9 @@ class Config:
                             dest='preprod_url',
                             default=None)
 
+        parser.add_argument('--release-branch',
+                            default='master')
+
         parser.add_argument('--app-name')
         parser.add_argument('--issue-tracker-url')
 

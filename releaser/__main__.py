@@ -16,9 +16,9 @@ next_version = {
 
 
 def generate_draft():
-    upcoming_commits = config.repo.iter_commits(f'{versions.latest.tag}..master')
-    # for commit in upcoming_commits:
-    #     print(f'* {commit.summary}')
+    c_range = f'{versions.latest.tag}..{config.release_branch}'
+    upcoming_commits = config.repo.iter_commits(c_range)
+
     l = {
         'app_name': config.app_name,
         'config': config,
@@ -27,6 +27,7 @@ def generate_draft():
         'next_version': next_version,
         'current_version': versions.latest,
     }
+
     print(template.render(**l))
 
 
