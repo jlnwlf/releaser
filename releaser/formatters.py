@@ -24,18 +24,20 @@ class GitmojiFormatter(Formatter):
     """Formatter for gitmoji commits"""
 
     DEFAULT_CATEGORIES = OrderedDict([
-        ('Features', '✨'),
-        ('Changes', '👽➕➖🔧🌐💬🗃'),
-        ('Rollback', '⏪'),
-        ('Operations', '🔨'),
-        ('Refactoring', '♻️🚚🏗💥🎨'),
-        ('UI/UX', '🚸♿️💄🍱💫'),
-        ('Security', '🛂🔒⬆️⬇️📌📈'),
-        ('Deprecations/Removal', '🔥🗑'),
-        ('Bugfixes', '🚑🐛'),
-        ('Testing', '✅'),
-        ('Performance', '⚡️'),
-        ('Misc', '📝🚀🎉🚨✏️📦⚗💡🍻🔊🔇📱🥚🌱'),
+        ('Features', ('✨', )),
+        ('Changes', ('👽', '➕', '➖', '🔧', '🌐', '💬', '🗃')),
+        ('Rollback', ('⏪', )),
+        ('Operations', ('🔨', )),
+        ('Refactoring', ('♻️', '🚚', '🏗', '💥', '🎨')),
+        ('UI/UX', ('🚸', '♿️', '💄', '🍱', '💫')),
+        ('Security', ('🛂', '🔒', '⬆️', '⬇️', '📌', '📈')),
+        ('Deprecations/Removal', ('🔥', '🗑')),
+        ('Bugfixes', ('🚑', '🐛')),
+        ('Testing', ('✅', )),
+        ('Performance', ('⚡️', )),
+        ('Misc', ('📝', '🚀', '🎉', '🚨', '✏️', '📦',
+                  '⚗', '💡', '🍻', '🔊', '🔇', '📱',
+                  '🥚', '🌱')),
     ])
 
     def __init__(self, *args, no_markdown=None, **kwargs):
@@ -49,14 +51,15 @@ class GitmojiFormatter(Formatter):
         treated = []
 
         for category_name, mojis in self.DEFAULT_CATEGORIES.items():
-            for moji in mojis:
-                for commit in commits:
+            for commit in commits:
+                for moji in mojis:
                     if moji in commit.summary:
                         try:
                             output[category_name].append(commit)
                         except KeyError:
                             output[category_name] = [commit]
                         treated.append(commit)
+                        break
 
         for commit in treated:
             commits.remove(commit)
