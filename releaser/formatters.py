@@ -38,6 +38,11 @@ class GitmojiFormatter(Formatter):
         ('Misc', '📝🚀🎉🚨✏️📦⚗💡🍻🔊🔇📱🥚🌱'),
     ])
 
+    def __init__(self, *args, no_markdown=None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.no_markdown = no_markdown
+
     def preprocess(self):
         output = OrderedDict()
         commits = list(self.commits)
@@ -61,14 +66,23 @@ class GitmojiFormatter(Formatter):
         s = StringIO()
 
         for title, commits in output.items():
-            s.write(f'## {title}\n\n')
+            if self.no_markdown:
+                s.write(f'{title}\n\n')
+            else:
+                s.write(f'### {title}\n\n')
             for commit in commits:
                 s.write(f'* {commit.summary}\n')
             s.write('\n')
 
-        s.write('<!--\n\nUncategorized commits:\n\n')
-        for commit in leftover_commits:
-            s.write(f'* {commit.summary}\n')
-        s.write('\n-->\n')
+        if len(leftover_commits) > 0:
+            if self.no_markdown:
+                s.write('Other\n\n')
+                for commit in leftover_commits:
+                    s.write(f'* {commit.summary}\n')
+            else:
+                s.write('<!--\n\nUncategorized commits:\n\n')
+                for commit in leftover_commits:
+                    s.write(f'* {commit.summary}\n')
+                s.write('\n-->\n')
 
         return s.getvalue()[:-1]

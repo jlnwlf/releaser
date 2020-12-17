@@ -13,6 +13,8 @@ class Config:
         self._config.start_text = self._config.start
         self._config.end_text = self._config.end
 
+        self._config.release_date = maya.when(self._config.release_date,
+                                              timezone='Europe/Zurich').local_datetime()
         self._config.start = maya.when(self._config.start,
                                        timezone='Europe/Zurich').local_datetime()
         self._config.end = maya.when(self._config.end,
@@ -40,6 +42,8 @@ class Config:
                             default='master')
 
         parser.add_argument('--app-name')
+        parser.add_argument('--release-date',
+                            default='today')
         parser.add_argument('--issue-tracker-url')
 
         next_version_group = parser.add_mutually_exclusive_group()
@@ -65,22 +69,33 @@ class Config:
                                         dest='next_version')
         next_version_group.set_defaults(next_version='MINOR')
 
-        # Could be None, as the meaning depend on the sub-command and
-        # evaluated at runtime...
-        # parser.add_argument('--range',
-        #                     dest='commit_range')
-
         subparsers = parser.add_subparsers(dest='command')
-        draft_parser = subparsers.add_parser('draft')
+        subparsers.add_parser('changes')
+        subparsers.add_parser('draft')
+        subparsers.add_parser('tag')
 
-        parser.add_argument('--template',
-                                  type=Path,
-                                  dest='template_path',
-                                  default=ROOT / 'releaser/templates/change.md.j2')
+        parser.add_argument('--template-mail',
+                            type=Path,
+                            dest='template_mail_path',
+                            default=ROOT / 'releaser/templates/mail.md.j2')
+
+        parser.add_argument('--template-tag',
+                            type=Path,
+                            dest='template_tag_path',
+                            default=ROOT / 'releaser/templates/tag.md.j2')
+
+        parser.add_argument('--template-changes',
+                            type=Path,
+                            dest='template_changes_path',
+                            default=ROOT / 'releaser/templates/changes.md.j2')
+
         parser.add_argument('--start',
                             default='today @ 21:45')
         parser.add_argument('--end',
                             default='today @ 22:15')
+
+        parser.set_defaults(command='changes')
+
         return parser
 
     def __getattr__(self, name):
