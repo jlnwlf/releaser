@@ -35,6 +35,8 @@ class VersionsList(list):
                 self.append(SemverTag.from_tag(tag))
             except ValueError:
                 ...  # Silence if tag is not a semver tag
+        if len(self) <= 0:
+            raise RuntimeError('Repo does not contain any SemVer tag...')
 
     def last(self, number=1):
         return sorted(self, reverse=True)[:number]
