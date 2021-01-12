@@ -60,7 +60,7 @@ def generate_tag():
     print(tag_text)
 
     if input('Create tag @ HEAD with the given text ? (y/n)') == 'y':
-        config.repo.create_tag(next_version, message=tag_text, s=True)
+        config.repo.create_tag(f'v{next_version}', message=tag_text, s=True)
 
 def main():
     {

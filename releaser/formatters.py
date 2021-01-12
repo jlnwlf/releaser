@@ -40,6 +40,8 @@ class GitmojiFormatter(Formatter):
                   '🥚', '🌱')),
     ])
 
+    DEFAULT_IGNORED = ('🔖', )
+
     def __init__(self, *args, no_markdown=None, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -77,14 +79,20 @@ class GitmojiFormatter(Formatter):
                 s.write(f'* {commit.summary}\n')
             s.write('\n')
 
-        if len(leftover_commits) > 0:
+        filtered_leftovers = []
+        for commit in leftover_commits:
+            if not any((m in commit.summary) for m in self.DEFAULT_IGNORED):
+                filtered_leftovers.append(commit)
+
+
+        if len(filtered_leftovers) > 0:
             if self.no_markdown:
                 s.write('Other\n\n')
-                for commit in leftover_commits:
+                for commit in filtered_leftovers:
                     s.write(f'* {commit.summary}\n')
             else:
                 s.write('<!--\n\nUncategorized commits:\n\n')
-                for commit in leftover_commits:
+                for commit in filtered_leftovers:
                     s.write(f'* {commit.summary}\n')
                 s.write('\n-->\n')
 
