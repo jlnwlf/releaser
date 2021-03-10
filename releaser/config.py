@@ -70,6 +70,7 @@ class Config:
         next_version_group.set_defaults(next_version='MINOR')
 
         subparsers = parser.add_subparsers(dest='command')
+        versions_subparser = subparsers.add_parser('versions')
         subparsers.add_parser('changes')
         subparsers.add_parser('draft')
         subparsers.add_parser('tag')
@@ -95,6 +96,11 @@ class Config:
                             default='today @ 22:15')
 
         parser.set_defaults(command='changes')
+
+        versions_subparser.add_argument('n',
+                                        nargs='?',
+                                        type=int,
+                                        default=999999999)
 
         return parser
 

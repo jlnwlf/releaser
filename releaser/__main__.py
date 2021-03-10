@@ -44,6 +44,12 @@ def print_changes():
 
     print(template_changes.render(**l))
 
+
+def print_versions():
+    for version in sorted(versions, reverse=True)[:config.n]:
+        print(version)
+
+
 def generate_tag():
     upcoming_commits = _commit_range()
     formatter = GitmojiFormatter(upcoming_commits, postprocessor=None,
@@ -67,6 +73,8 @@ def main():
         'draft': generate_draft,
         'tag': generate_tag,
         'changes': print_changes,
+        'versions': print_versions,
+        None: lambda a: None,
     }[config.command]()
 
 
