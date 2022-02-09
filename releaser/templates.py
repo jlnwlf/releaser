@@ -1,6 +1,8 @@
 from jinja2 import Template
 
-from .config import config
+from .config import Config
+
+config = Config()
 
 template_mail = Template(open(config.template_mail_path).read())
 template_tag = Template(open(config.template_tag_path).read())

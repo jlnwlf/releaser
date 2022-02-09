@@ -2,7 +2,9 @@ import re
 
 import semver
 
-from .config import config
+from .config import Config
+
+config = Config()
 
 REGEX_VERSION = re.compile(r"^v\d+.*")
 

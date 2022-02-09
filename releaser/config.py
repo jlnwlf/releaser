@@ -1,24 +1,84 @@
 from pathlib import Path
+import re
+from datetime import datetime, time
 
 from configargparse import ArgParser
 from git import Repo
-import maya
+import arrow
+import humanize
 
 ROOT = Path(__file__).parent.parent.absolute()
+
+
+def relative_time(input_str, now=None):
+    """Type parser for argparse for dates.
+
+    Could be called recursively.
+
+    Args:
+        string_date (str): Examples
+            - today
+            - tomorrow
+            - today @ 21:45
+
+    Returns:
+        datetime: The datetime representation of given string.
+    """
+
+    if not now:
+        now = arrow.now()
+
+    input_str = input_str.strip().lower()
+
+    # Simple date
+
+    if input_str == 'today':
+        return now.date()
+    elif input_str == 'tomorrow':
+        return now.dehumanize('in 1 days').date()
+
+    # Only time
+
+    t = re.match(r"(\d+)(?::|h)(\d+)", input_str)
+    if t:
+        t = [int(v) for v in t.groups()]
+        return datetime.combine(now.date(), time(*t))
+
+    # Date + time
+
+    splitted = _split_date_and_time_string(input_str)
+
+    if splitted:
+        d = relative_time(splitted['date'])
+        t = relative_time(splitted['time']).time()
+        return datetime.combine(d, t)
+
+    # Default
+
+    return now.dehumanize(input_str).date()
+
+
+def _split_date_and_time_string(string_date):
+    m = re.match(r"(?P<date>.+)\s+(@|at)\s*(?P<time>.+)", string_date)
+    if m:
+        return m.groupdict()
+
+
+def _humanize_relative_datetime(s):
+    return f"{humanize.naturalday(s)} at {s.strftime('%H:%M')}"
+
 
 class Config:
     def __init__(self):
         self._config = self._create_parser().parse_known_args()[0]
 
-        self._config.start_text = self._config.start
-        self._config.end_text = self._config.end
+    @property
+    def start_text(self):
+        return _humanize_relative_datetime(self._config.start)
 
-        self._config.release_date = maya.when(self._config.release_date,
-                                              timezone='Europe/Zurich').local_datetime()
-        self._config.start = maya.when(self._config.start,
-                                       timezone='Europe/Zurich').local_datetime()
-        self._config.end = maya.when(self._config.end,
-                                     timezone='Europe/Zurich').local_datetime()
+    @property
+    def end_text(self):
+        return _humanize_relative_datetime(self._config.end)
 
     @staticmethod
     def _create_parser():
@@ -43,7 +103,8 @@ class Config:
 
         parser.add_argument('--app-name')
         parser.add_argument('--release-date',
-                            default='today')
+                            default='today',
+                            type=relative_time)
         parser.add_argument('--issue-tracker-url')
 
         next_version_group = parser.add_mutually_exclusive_group()
@@ -91,9 +152,11 @@ class Config:
                             default=ROOT / 'releaser/templates/changes.md.j2')
 
         parser.add_argument('--start',
-                            default='today @ 21:45')
+                            default='today @ 21:45',
+                            type=relative_time)
         parser.add_argument('--end',
-                            default='today @ 22:15')
+                            default='today @ 22:15',
+                            type=relative_time)
 
         parser.set_defaults(command='changes')
 
@@ -106,5 +169,3 @@ class Config:
 
     def __getattr__(self, name):
         return getattr(self._config, name)
-
-config = Config()

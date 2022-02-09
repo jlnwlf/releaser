@@ -2,10 +2,12 @@
 
 from humanize import naturaldelta
 
-from .config import config
+from .config import Config
 from .versions import versions
 from .templates import template_mail, template_tag, template_changes
 from .formatters import GitmojiFormatter
+
+config = Config()
 
 next_version = {
     'MAJOR': versions.next_major,
@@ -38,7 +40,7 @@ def print_changes():
 
     l = {
         'next_version': next_version,
-        'release_date': config.release_date.date(),
+        'release_date': config.release_date,
         'summary': formatter.render()
     }
 
@@ -59,7 +61,7 @@ def generate_tag():
         'app_name': config.app_name,
         'summary': formatter.render(),
         'next_version': next_version,
-        'title': f'{config.app_name} {next_version} ({config.release_date.date()})'
+        'title': f'{config.app_name} {next_version} ({config.release_date})'
     }
 
     tag_text = template_tag.render(**l)
