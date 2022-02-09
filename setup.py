@@ -34,26 +34,18 @@ setup(
     packages=find_packages(),
 
     install_requires=[
+        'arrow',
         'configargparse',
-        'dateparser',
-        'gitdb',
         'gitpython',
         'humanize',
         'jinja2',
         'markdown',
-        'markupsafe',
-        'maya',
-        'pendulum',
-        'python-dateutil',
-        'pytz',
-        'pytzdata',
-        'regex',
         'semver',
-        'six',
-        'smmap',
-        'snaptime',
-        'tzlocal',
     ],
+
+    extras_require={
+        'test': ['pytest'],
+    },
 
     package_data={'releaser': ['templates/*.j2']},
 

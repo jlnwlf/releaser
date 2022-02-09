@@ -1,6 +1,8 @@
 import re
 
-from .config import config
+from .config import Config
+
+config = Config()
 
 class Postprocessor:
     def __init__(self, rendered_text):
