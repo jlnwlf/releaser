@@ -42,7 +42,7 @@ def relative_time(input_str, now=None):
     t = re.match(r"(\d+)(?::|h)(\d+)", input_str)
     if t:
         t = [int(v) for v in t.groups()]
-        return datetime.combine(now.date(), time(*t))
+        return datetime.combine(now.date(), time(*t)).astimezone()
 
     # Date + time
 
@@ -51,11 +51,11 @@ def relative_time(input_str, now=None):
     if splitted:
         d = relative_time(splitted['date'])
         t = relative_time(splitted['time']).time()
-        return datetime.combine(d, t)
+        return datetime.combine(d, t).astimezone()
 
     # Default
 
-    return now.dehumanize(input_str).date()
+    return now.dehumanize(input_str).date().astimezone()
 
 
 def _split_date_and_time_string(string_date):
