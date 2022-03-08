@@ -55,7 +55,7 @@ def relative_time(input_str, now=None):
 
     # Default
 
-    return now.dehumanize(input_str).date().astimezone()
+    return now.dehumanize(input_str).date()
 
 
 def _split_date_and_time_string(string_date):
