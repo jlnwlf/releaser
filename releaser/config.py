@@ -135,6 +135,7 @@ class Config:
         subparsers.add_parser('changes')
         subparsers.add_parser('draft')
         subparsers.add_parser('tag')
+        subparsers.add_parser('next')
 
         parser.add_argument('--template-mail',
                             type=Path,

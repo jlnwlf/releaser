@@ -52,6 +52,9 @@ def print_versions():
         print(version)
 
 
+def print_next_version():
+    print(next_version)
+
 def generate_tag():
     upcoming_commits = _commit_range()
     formatter = GitmojiFormatter(upcoming_commits, postprocessor=None,
@@ -76,6 +79,7 @@ def main():
         'tag': generate_tag,
         'changes': print_changes,
         'versions': print_versions,
+        'next': print_next_version,
         None: lambda a: None,
     }[config.command]()
 
