@@ -21,7 +21,9 @@
     }
 </style>
 
-Heads up ! **{{ app_name }}** {{ config.next_version.lower() }} version `{{ next_version }}` will be released {{ config.start_text }}:
+{{ random_greetings }}
+
+**{{ app_name }}** {{ config.next_version.lower() }} version `{{ next_version }}` will be released {{ config.start_text }}:
 
 {% block details_table -%}
 <table>
@@ -29,12 +31,9 @@ Heads up ! **{{ app_name }}** {{ config.next_version.lower() }} version `{{ next
   <tr><td>End time</td><td>{{ config.end }} (duration: {{ duration_text }})</td></tr>
   <tr><td>Expected Impact</td><td>{{app_name}} will not be reachable for {{ duration_text }}</td></tr>
   <tr><td>Rollback</td><td>Rollback to {{app_name}} previous version <code>{{ current_version }}</code></td></tr>
-</table>
-{% endblock %}
-
+</table>{% endblock %}
 {% block changelist %}
-Here are the changes introduced with that version:
-
+{{ random_introduction }}
 {{ summary -}}
 {%- endblock -%}
 

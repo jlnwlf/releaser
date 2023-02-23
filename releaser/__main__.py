@@ -1,10 +1,11 @@
 """Main entrypoint for CLI interactions."""
 
 from humanize import naturaldelta
+from random import choice
 
 from .config import Config
 from .versions import versions
-from .templates import template_mail, template_tag, template_changes
+from .templates import template_mail, template_tag, template_changes, RANDOM_GREETINGS, RANDOM_INTRODUCTIONS
 from .formatters import GitmojiFormatter
 
 config = Config()
@@ -30,6 +31,8 @@ def generate_draft():
         'summary': formatter.render(),
         'next_version': next_version,
         'current_version': versions.latest,
+        'random_greetings': choice(RANDOM_GREETINGS),
+        'random_introduction': choice(RANDOM_INTRODUCTIONS),
     }
 
     print(template_mail.render(**l))
